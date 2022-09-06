@@ -37,14 +37,17 @@ Shader "Unlit/WaveShader"
 			{
 				// Displace the original vertex in model space
 				
-				float4 displacement = float4(0.0f, 0.5f, 0.0f, 0.0f) 
-					* sin(-abs(v.vertex.x - v.vertex.z)/2 + _Time.z)
-					* (abs(v.vertex.x - v.vertex.z)/4);
+				// float4 displacement = float4(0.0f, 0.5f, 0.0f, 0.0f) 
+				// 	* sin(-abs(v.vertex.x - v.vertex.z)/2 + _Time.z)
+				// 	* (abs(v.vertex.x - v.vertex.z)/8);
 
-				v.vertex += displacement;
+				// v.vertex += displacement;
 
 				vertOut o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				// o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				float4 viewPosition = mul(UNITY_MATRIX_MV, v.vertex);
+				viewPosition += float4(0.0f, 1.0f, 0.0f, 0.0f) * sin(viewPosition.x);
+				o.vertex = mul(UNITY_MATRIX_P, viewPosition);
 				o.uv = v.uv;
 				return o;
 			}
